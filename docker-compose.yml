@@ -1,0 +1,60 @@
+version: '3'
+services:
+  
+  #-------------------------------------------------------------//  CONTAİNER CONFİG  //---------------------------------------------------------------------------------#
+  
+  redis:
+    image: redis:latest
+    container_name: redis_test
+    ports:
+      - 6379:6379
+    networks:
+      - common-bridge  
+
+  rabbitmq:
+    image: rabbitmq:3.9.13-mgmt
+    container_name: rabbitmq_test
+    ports:
+      - 15672:15672
+      - 5672:5672
+    networks:
+      - common-bridge      
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    container_name: elasticsearch
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+      - network.host=0.0.0.0
+    networks:
+      - common-bridge
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.10.2
+    container_name: kibana
+    ports:
+      - 5601:5601
+    networks:
+      - common-bridge      
+  
+  db:
+    image: postgres:13
+    container_name: postgres_test
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=*****    
+    networks:
+      - common-bridge
+   
+  
+#-------------------------------------------------------------//  NETWORK CONFİG  //-------------------------------------------------------------------------------------#
+
+networks:
+  common-bridge:
+    driver: bridge
+
+
